@@ -6,7 +6,7 @@ import userMiddleware from "../middleware/user.middleware.js"
 import { Router } from "express";
 const route = Router()
 
-route.post("/addacc",adminMiddleware,accountController.accCreation);
+// route.post("/addacc",adminMiddleware,accountController.accCreation);
 route.put("/update/:id",adminMiddleware,accountController.updating)
 route.delete("/delete",adminMiddleware,accountController.deleteAccount)
 route.get("/list",adminMiddleware,accountController.accList)

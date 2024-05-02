@@ -4,19 +4,23 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import route from "./route/user.route.js";
 import router from "./route/tokenRoute.js";
-import authjwt from "./helper/jwt.js";
+// import authjwt from "./helper/jwt.js";
 import accRoute from "./route/acc.route.js"
+// import cors from "cors";
+import swaggerUi from 'swagger-ui-express';
+import swagger from "./Docs/swagger.json" assert { type: "json" };
+
 const port = process.env.PORT || 3000;
 const db = process.env.DB || "mongodb://localhost:27017/Autho";
-const app = express();
+const app = express();  
 //middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(authjwt());
+// app.use(authjwt());
 
 //routes
 app.use("/api/v1", route);
-app.use("/api",accRoute)
+app.use("/api/account",accRoute)
 
 
 app.use("/api/v1/token", router);
@@ -30,5 +34,7 @@ try {
 } catch (err) {
   console.log(err);
 }
+app.use('/api-doc', swaggerUi.serve);
+app.use('/api-doc', swaggerUi.setup(swagger));
 
 // app.use(ErrorHandler())

@@ -25,18 +25,14 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      default: "user",
+      default: "",
     },
     verified: {
       type: Boolean,
       required: true,
       default: false,
     },
-    balance: {
-      type: Number,
-      required: true,
-      default: 0
-  },
+  
     otpExpires: {
         type: Date,
         required: false,

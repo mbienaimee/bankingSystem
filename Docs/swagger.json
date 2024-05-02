@@ -1,323 +1,433 @@
-
 {
     "swagger": "2.0",
     "info": {
         "title": "BANKING SYSTEM",
-        "description": "This is the API Specification for the Banking system backend server",
+        "description": "API Specification for the Banking system backend server",
         "version": "1.0.0",
         "contact": {
             "email": "m.bienaimee@alustudent.com"
         },
         "license": {
             "name": "MIT",
-            "url": "https://opensource.org/license/mit"
+            "url": "https://opensource.org/licenses/mit"
         },
         "externalDocs": {
             "description": "Get source code",
             "url": "https://github.com/mbienaimee/bsa"
         }
     },
-    "basePath": "/swagger-api",
+    "basePath": "",
     "schemes": ["http", "https"],
+    "securityDefinitions": {
+        "bearerAuth": {
+          "type": "apiKey",
+          "name": "x-auth-token",
+          "in": "header",
+          "description": "Enter your JWT token in the format 'Bearer {token}'"
+        }
+      },
     "tags": [
         {
             "name": "User",
-            "description": "Operations pertaining to user"
+            "description": "Operations pertaining to users"
         },
         {
             "name": "Account",
-            "description": "Operations pertaining to user"
+            "description": "Operations pertaining to bank accounts"
         }
     ],
     "paths": {
+        "/api/account/addacc": {
+            "post": {
+                "tags": ["Account"],
+                "summary": "Create a new bank account",
+                "description": "Creates a new bank account",
+                "security": [
+                    {
+                        "adminMiddleware": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "schema": {
+                            "$ref": "#/components/schemas/account"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account created successfully"
+                    }
+                }
+            }
+        },
+        "/api/account/update/{id}": {
+            "put": {
+                "tags": ["Account"],
+                "summary": "Update a bank account",
+                "description": "Updates an existing bank account",
+                "security": [
+                    {
+                        "adminMiddleware": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the account to update",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "schema": {
+                            "$ref": "#/components/schemas/account"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account updated successfully"
+                    }
+                }
+            }
+        },
+        "/api/account/delete": {
+            "delete": {
+                "tags": ["Account"],
+                "summary": "Delete a bank account",
+                "description": "Deletes a bank account",
+                "security": [
+                    {
+                        "adminMiddleware": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "description": "ID of the account to delete",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account deleted successfully"
+                    }
+                }
+            }
+        },
+        "/api/account/list": {
+            "get": {
+                "tags": ["Account"],
+                "summary": "Get list of bank accounts",
+                "description": "Retrieves a list of all bank accounts",
+                "parameters": [
+                    {
+                      "in": "query",
+                      "name": "all",
+          
+                      "required": true,
+                      "description": "account object"
+                    }
+                  ],
+                "security": [
+                    {
+                        "adminMiddleware": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of bank accounts retrieved successfully",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/account"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/account/userById": {
+            "get": {
+                "tags": ["Account"],
+                "summary": "Get bank account by ID",
+                "description": "Retrieves a specific bank account by its ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "ID of the account to retrieve",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Bank account retrieved successfully",
+                        "schema": {
+                            "$ref": "#/components/schemas/account"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/account/transfer": {
+            "post": {
+                "tags": ["Account"],
+                "summary": "Transfer funds between accounts",
+                "description": "Transfer funds from one bank account to another",
+                "security": [
+                    {
+                        "userMiddleware": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "schema": {
+                            "$ref": "#/components/schemas/transferRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Funds transferred successfully"
+                    }
+                }
+            }
+        },
+        "/api/account/deposit": {
+            "post": {
+                "tags": ["Account"],
+                "summary": "Deposit funds into an account",
+                "description": "Deposit funds into a bank account",
+                "security": [
+                    {
+                        "userMiddleware": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "schema": {
+                            "$ref": "#/components/schemas/depositRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Funds deposited successfully"
+                    }
+                }
+            }
+        },
+        "/api/account/withdraw": {
+            "post": {
+                "tags": ["Account"],
+                "summary": "Withdraw funds from an account",
+                "description": "Withdraw funds from a bank account",
+                "security": [
+                    {
+                        "userMiddleware": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "schema": {
+                            "$ref": "#/components/schemas/withdrawalRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Funds withdrawn successfully"
+                    }
+                }
+            }
+        },
         "/api/v1/register": {
             "post": {
-                "tags": ["Authantication"],
-                "summary": "Add a new user",
-                "description": "Creates a new user with the provided details",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/user"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Task created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/user"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request - Validation errors",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/user/get": {
-            "get": {
-                "tags": ["user"],
-                "summary": "Get all users",
-                "description": "Retrieves a list of all user",
-                "responses": {
-                    "200": {
-                        "description": "user retrieved successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/user"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/user/update": {
-            "put": {
-                "tags": ["user"],
-                "summary": "Update a user",
-                "description": "Updates an existing user with the provided details",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/user"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "user updated successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/user"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found - user not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/user/findById": {
-            "get": {
-                "tags": ["user"],
-                "summary": "Get a user by ID",
-                "description": "Retrieves a specific user based on its ID",
+                "tags": ["User"],
+                "summary": "Register a new user",
+                "description": "Creates a new user",
                 "parameters": [
                     {
-                        "name": "id",
-                        "in": "query",
-                        "required": true,
+                        "in": "body",
+                        "name": "body",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/components/schemas/user"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "user retrieved successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/user"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found - user not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        "description": "User registered successfully"
                     }
                 }
             }
         },
-        "/api/user/delete": {
-            "delete": {
-                "tags": ["user"],
-                "summary": "Delete a user",
-                "description": "Deletes a user based on its ID",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "user deleted successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "user deleted"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found - user not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/user/register": {
+        "/api/v1/login": {
             "post": {
-                "tags": ["user"],
-                "summary": "Registration of user",
-                "description": "Register a new user  with the provided details",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/User"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "User created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/User"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request - Validation errors",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/user/login": {
-            "post": {
-                "tags": ["user"],
+                "tags": ["User"],
                 "summary": "Login existing user",
-                "description": "Login existing user with the provided details",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/User"
+                "description": "Logs in an existing user",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "schema": {
+                            "$ref": "#/components/schemas/loginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User logged in successfully"
+                    }
+                }
+            }
+        },
+        "/api/v1/verify": {
+            "post": {
+                "tags": ["User"],
+                "summary": "Validate OTP",
+                "description": "Validates OTP for user verification",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "schema": {
+                            "$ref": "#/components/schemas/otpVerificationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OTP validated successfully"
+                    }
+                }
+            }
+        },
+        "/api/v1/list": {
+            "get": {
+                "tags": ["User"],
+                "summary": "Get list of users",
+                "description": "Retrieves a list of all users",
+                "parameters": [
+                    {
+                      "in": "query",
+                      "name": "all",
+          
+                      "required": true,
+                      "description": "Contact object"
+                    }
+                  ],
+                "security": [
+                    {
+                        "adminMiddleware": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of users retrieved successfully",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/user"
                             }
                         }
                     }
-                },
+                }
+            }
+        },
+        "/api/v1/list/{id}": {
+            "get": {
+                "tags": ["User"],
+                "summary": "Get user by ID",
+                "description": "Retrieves a specific user by ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the user to retrieve",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
                 "responses": {
-                    "201": {
-                        "description": "User Login",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/User"
-                                }
-                            }
+                    "200": {
+                        "description": "User retrieved successfully",
+                        "schema": {
+                            "$ref": "#/components/schemas/user"
                         }
+                    }
+                }
+            }
+        },
+        "/api/v1/delete/{id}": {
+            "delete": {
+                "tags": ["User"],
+                "summary": "Delete user",
+                "description": "Deletes a user",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the user to delete",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "security": [
+                    {
+                        "userMiddleware": []
                     },
-                    "400": {
-                        "description": "Bad Request - Validation errors",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
+                    {
+                        "adminMiddleware": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User deleted successfully"
+                    }
+                }
+            }
+        },
+        "/api/v1/update/{id}": {
+            "put": {
+                "tags": ["User"],
+                "summary": "Update user details",
+                "description": "Updates details of an existing user",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the user to update",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "schema": {
+                            "$ref": "#/components/schemas/user"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User details updated successfully"
                     }
                 }
             }
@@ -328,73 +438,147 @@
             "user": {
                 "type": "object",
                 "properties": {
-                    "_id": {
+                    "firstName": {
                         "type": "string",
-                        "description": "Unique identifier of the task"
+                        "description": "First name of the user"
                     },
                     "lastName": {
                         "type": "string",
-                        "description": "Name of user"
-                    },
-                    "firstName": {
-                        "type": "string",
-                        "description": "Description of the task"
+                        "description": "Last name of the user"
                     },
                     "email": {
-                        "type": "number",
-                        "description": "Price of user per unit"
+                        "type": "string",
+                        "description": "Email address of the user"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "User's password"
                     },
                     "age": {
-                        "type": "number",
-                        "description": "The quantity of user in stock"
-                    },
-                    "password": {
-                        "type": "number",
-                        "description": "The quantity of user in stock"
-                    },
+                        "type": "string",
+                        "description": "User's password"
+                    }, 
                     "role": {
-                        "type": "number",
-                        "description": "The quantity of user in stock"
+                        "type": "string",
+                        "description": "User's password"
                     },
                     "verified": {
-                        "type": "number",
-                        "description": "The quantity of user in stock"
-                    },
-                    "otpExpires": {
-                        "type": "number",
-                        "description": "The quantity of user in stock"
+                        "type": "string",
+                        "description": "User's password"
                     }
-
                 }
             },
-            "User": {
+            "account": {
                 "type": "object",
                 "properties": {
-                    "_id": {
+                    "firstName": {
                         "type": "string",
-                        "description": "Unique identifier of the task"
+                        "description": "First name of the account holder"
                     },
-                    "username": {
+                    "lastName": {
                         "type": "string",
-                        "description": "The name of User"
+                        "description": "Last name of the account holder"
                     },
+                    "idNumber": {
+                        "type": "string",
+                        "description": "Identification number of the account holder"
+                    },
+                    "accountType": {
+                        "type": "string",
+                        "description": "Type of the bank account (e.g., savings, checking)"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "description": "Contact phone number of the account holder"
+                    },
+                    "accountNumber": {
+                        "type": "string",
+                        "description": "Unique account number"
+                    }
+                }
+            },
+            "transferRequest": {
+                "type": "object",
+                "properties": {
+                    "fromAccountNumber": {
+                        "type": "string",
+                        "description": "Account number to transfer funds from"
+                    },
+                    "toAccountNumber": {
+                        "type": "string",
+                        "description": "Account number to transfer funds to"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "description": "Amount to transfer"
+                    }
+                }
+            },
+            "depositRequest": {
+                "type": "object",
+                "properties": {
+                    "accountNumber": {
+                        "type": "string",
+                        "description": "Account number to deposit funds into"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "description": "Amount to deposit"
+                    }
+                }
+            },
+            "withdrawalRequest": {
+                "type": "object",
+                "properties": {
+                    "accountNumber": {
+                        "type": "string",
+                        "description": "Account number to withdraw funds from"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "description": "Amount to withdraw"
+                    }
+                }
+            },
+            "loginRequest": {
+                "type": "object",
+                "properties": {
                     "email": {
                         "type": "string",
-                        "description": "Email of the user"
+                        "description": "User's email address"
                     },
                     "password": {
                         "type": "string",
-                        "description": "Password of the user"
-                    },
-                    "isAdmin": {
-                        "type": "boolean",
-                        "description": "Is it admin or not?"
-                    },
-                    "otp": {
-                        "type": "number",
-                        "description": "The verification code sent to the user email"
+                        "description": "User's password"
                     }
                 }
+            },
+            "otpVerificationRequest": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "User's email address"
+                    },
+                    "otp": {
+                        "type": "string",
+                        "description": "One-time password for verification"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "adminMiddleware": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header",
+                "description": "Use admin token for authorization"
+            },
+            "userMiddleware": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header",
+                "description": "Use user token for authorization"
             }
         }
     }

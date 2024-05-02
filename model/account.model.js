@@ -1,12 +1,16 @@
 import mongoose from "mongoose";
 
 const accountSchema = new mongoose.Schema({
-  name: {
+  lastName: {
+    type: String,
+    required: true,
+  },
+  firstName: {
     type: String,
     required: true,
   },
   idNumber: { type: String, required: true },
-  idCard: { type: String, required: true },
+  // idCard: { type: String, required: true },
   accountType: {
     type: String,
     required: true,
@@ -18,7 +22,8 @@ const accountSchema = new mongoose.Schema({
   accountNumber:{
     type: String,
     required: false,
-  }
+  },
+  
 });
 
 const accountModel = mongoose.model("account", accountSchema);

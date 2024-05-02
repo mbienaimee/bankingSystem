@@ -89,8 +89,9 @@ next(err);
 
 },
   allUser: async (req, res) => {
+   
     try {
-      const allUser = await userModel.find();
+      const allUser = await userModel.find().select(-password);
       res.status(200).json({
         message: "All user",
         allUser: allUser,
@@ -135,7 +136,7 @@ next(err);
   },
   listByid: async (req,res)=>{
     try {
-      const user = await userModel.findById(req.params.id);
+      const user = await userModel.findById(req.params.id).select(-password);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
