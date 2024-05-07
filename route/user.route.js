@@ -8,12 +8,13 @@ const route = Router();
 
 route.post("/register",usercreateValidations,userController.signup);
 route.post("/login",loginusers, userController.login);
+
 route.post("/verify",userController.ValidateOpt)
 route.get("/list", adminMiddleware, userController.allUser);
 route.get("/list/:id", userController.listByid);
 route.delete("/user/:id", userMiddleware, userController.Deleting);
 route.delete("/user/:id", adminMiddleware, userController.Deleting);
 route.put("/user/update/:id", userController.updating);
-route.post("/account", adminMiddleware, accountController.accCreation)
+// route.post("/account", adminMiddleware, accountController.accCreation)
 
 export default route;

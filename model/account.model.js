@@ -23,6 +23,7 @@ const accountSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  amount: { type: Number, required: true}
   
 });
 

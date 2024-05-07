@@ -240,7 +240,7 @@ ResetPassword : async (req, res, next) => {
         }
     
         // Find user
-        const foundUser = await UserModel.findById(req.body.id);
+        const foundUser = await userModel.findById(req.body.id);
         if (!foundUser) {
             return next(new BadRequestError("User not found!"));
         };

@@ -10,31 +10,30 @@
         "license": {
             "name": "MIT",
             "url": "https://opensource.org/licenses/mit"
-        },
-        "externalDocs": {
-            "description": "Get source code",
-            "url": "https://github.com/mbienaimee/bsa"
         }
+      
     },
+    "host": "localhost:3000",
     "basePath": "",
+    "servers": [
+        {
+          "url": "http://localhost:3000",
+          "description": "Local server"
+        }
+      ],
     "schemes": ["http", "https"],
     "securityDefinitions": {
         "bearerAuth": {
-          "type": "apiKey",
-          "name": "x-auth-token",
-          "in": "header",
-          "description": "Enter your JWT token in the format 'Bearer {token}'"
+            "type": "apiKey",
+            "name": "x-auth-token",
+            "in": "header",
+            "description": "Enter your JWT token in the format 'Bearer {token}'"
         }
-      },
+    },
     "tags": [
-        {
-            "name": "User",
-            "description": "Operations pertaining to users"
-        },
-        {
-            "name": "Account",
-            "description": "Operations pertaining to bank accounts"
-        }
+        {"name": "User", "description": "Operations pertaining to users"},
+        {"name": "Account", "description": "Operations pertaining to bank accounts"},
+        {"name": "Client", "description": "Operations pertaining to bank clients"}
     ],
     "paths": {
         "/api/account/addacc": {
@@ -44,23 +43,17 @@
                 "description": "Creates a new bank account",
                 "security": [
                     {
-                        "adminMiddleware": []
+                        "BearerAuth": []
                     }
                 ],
                 "parameters": [
                     {
                         "in": "body",
                         "name": "body",
-                        "schema": {
-                            "$ref": "#/components/schemas/account"
-                        }
+                        "schema": {"$ref": "#/components/schemas/account"}
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Account created successfully"
-                    }
-                }
+                "responses": {"200": {"description": "Account created successfully"}}
             }
         },
         "/api/account/update/{id}": {
@@ -70,7 +63,7 @@
                 "description": "Updates an existing bank account",
                 "security": [
                     {
-                        "adminMiddleware": []
+                        "BearerAuth": []
                     }
                 ],
                 "parameters": [
@@ -84,16 +77,10 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "schema": {
-                            "$ref": "#/components/schemas/account"
-                        }
+                        "schema": {"$ref": "#/components/schemas/account"}
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Account updated successfully"
-                    }
-                }
+                "responses": {"200": {"description": "Account updated successfully"}}
             }
         },
         "/api/account/delete": {
@@ -103,7 +90,7 @@
                 "description": "Deletes a bank account",
                 "security": [
                     {
-                        "adminMiddleware": []
+                        "BearerAuth": []
                     }
                 ],
                 "parameters": [
@@ -115,11 +102,7 @@
                         "type": "string"
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Account deleted successfully"
-                    }
-                }
+                "responses": {"200": {"description": "Account deleted successfully"}}
             }
         },
         "/api/account/list": {
@@ -129,27 +112,21 @@
                 "description": "Retrieves a list of all bank accounts",
                 "parameters": [
                     {
-                      "in": "query",
-                      "name": "all",
-          
-                      "required": true,
-                      "description": "account object"
+                        "in": "query",
+                        "name": "all",
+                        "required": true,
+                        "description": "account object"
                     }
-                  ],
+                ],
                 "security": [
                     {
-                        "adminMiddleware": []
+                        "BearerAuth": []
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "List of bank accounts retrieved successfully",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/components/schemas/account"
-                            }
-                        }
+                        "schema": {"type": "array", "items": {"$ref": "#/components/schemas/account"}}
                     }
                 }
             }
@@ -171,9 +148,7 @@
                 "responses": {
                     "200": {
                         "description": "Bank account retrieved successfully",
-                        "schema": {
-                            "$ref": "#/components/schemas/account"
-                        }
+                        "schema": {"$ref": "#/components/schemas/account"}
                     }
                 }
             }
@@ -185,23 +160,17 @@
                 "description": "Transfer funds from one bank account to another",
                 "security": [
                     {
-                        "userMiddleware": []
+                        "BearerAuth": []
                     }
                 ],
                 "parameters": [
                     {
                         "in": "body",
                         "name": "body",
-                        "schema": {
-                            "$ref": "#/components/schemas/transferRequest"
-                        }
+                        "schema": {"$ref": "#/components/schemas/transferRequest"}
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Funds transferred successfully"
-                    }
-                }
+                "responses": {"200": {"description": "Funds transferred successfully"}}
             }
         },
         "/api/account/deposit": {
@@ -211,23 +180,17 @@
                 "description": "Deposit funds into a bank account",
                 "security": [
                     {
-                        "userMiddleware": []
+                        "BearerAuth": []
                     }
                 ],
                 "parameters": [
                     {
                         "in": "body",
                         "name": "body",
-                        "schema": {
-                            "$ref": "#/components/schemas/depositRequest"
-                        }
+                        "schema": {"$ref": "#/components/schemas/depositRequest"}
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Funds deposited successfully"
-                    }
-                }
+                "responses": {"200": {"description": "Funds deposited successfully"}}
             }
         },
         "/api/account/withdraw": {
@@ -237,23 +200,17 @@
                 "description": "Withdraw funds from a bank account",
                 "security": [
                     {
-                        "userMiddleware": []
+                        "BearerAuth": []
                     }
                 ],
                 "parameters": [
                     {
                         "in": "body",
                         "name": "body",
-                        "schema": {
-                            "$ref": "#/components/schemas/withdrawalRequest"
-                        }
+                        "schema": {"$ref": "#/components/schemas/withdrawalRequest"}
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Funds withdrawn successfully"
-                    }
-                }
+                "responses": {"200": {"description": "Funds withdrawn successfully"}}
             }
         },
         "/api/v1/register": {
@@ -265,16 +222,10 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "schema": {
-                            "$ref": "#/components/schemas/user"
-                        }
+                        "schema": {"$ref": "#/components/schemas/user"}
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "User registered successfully"
-                    }
-                }
+                "responses": {"200": {"description": "User registered successfully"}}
             }
         },
         "/api/v1/login": {
@@ -286,16 +237,10 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "schema": {
-                            "$ref": "#/components/schemas/loginRequest"
-                        }
+                        "schema": {"$ref": "#/components/schemas/loginRequest"}
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "User logged in successfully"
-                    }
-                }
+                "responses": {"200": {"description": "User logged in successfully"}}
             }
         },
         "/api/v1/verify": {
@@ -307,16 +252,10 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "schema": {
-                            "$ref": "#/components/schemas/otpVerificationRequest"
-                        }
+                        "schema": {"$ref": "#/components/schemas/otpVerificationRequest"}
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "OTP validated successfully"
-                    }
-                }
+                "responses": {"200": {"description": "OTP validated successfully"}}
             }
         },
         "/api/v1/list": {
@@ -326,27 +265,21 @@
                 "description": "Retrieves a list of all users",
                 "parameters": [
                     {
-                      "in": "query",
-                      "name": "all",
-          
-                      "required": true,
-                      "description": "Contact object"
+                        "in": "query",
+                        "name": "all",
+                        "required": true,
+                        "description": "Contact object"
                     }
-                  ],
+                ],
                 "security": [
                     {
-                        "adminMiddleware": []
+                        "BearerAuth": []
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "List of users retrieved successfully",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/components/schemas/user"
-                            }
-                        }
+                        "schema": {"type": "array", "items": {"$ref": "#/components/schemas/user"}}
                     }
                 }
             }
@@ -368,9 +301,7 @@
                 "responses": {
                     "200": {
                         "description": "User retrieved successfully",
-                        "schema": {
-                            "$ref": "#/components/schemas/user"
-                        }
+                        "schema": {"$ref": "#/components/schemas/user"}
                     }
                 }
             }
@@ -391,17 +322,10 @@
                 ],
                 "security": [
                     {
-                        "userMiddleware": []
-                    },
-                    {
-                        "adminMiddleware": []
+                        "BearerAuth": []
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "User deleted successfully"
-                    }
-                }
+                "responses": {"200": {"description": "User deleted successfully"}}
             }
         },
         "/api/v1/update/{id}": {
@@ -420,14 +344,54 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "schema": {
-                            "$ref": "#/components/schemas/user"
-                        }
+                        "schema": {"$ref": "#/components/schemas/user"}
+                    }
+                ],
+                "responses": {"200": {"description": "User details updated successfully"}}
+            }
+        },
+        "/api/client/add": {
+            "post": {
+                "tags": ["Client"],
+                "summary": "Create a new client",
+                "description": "Creates a new client",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "schema": {"$ref": "#/components/schemas/client"}
+                    }
+                ],
+                "responses": {"200": {"description": "Client created successfully"}}
+            }
+        },
+        "/api/client/list": {
+            "get": {
+                "tags": ["Client"],
+                "summary": "Get list of clients",
+                "description": "Retrieves a list of all clients",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "all",
+                        "required": true,
+                        "description": "Contact object"
+                    }
+                ],
+                "security": [
+                    {
+                        "BearerAuth": []
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "User details updated successfully"
+                        "description": "List of clients retrieved successfully",
+                        "schema": {"type": "array", "items": {"$ref": "#/components/schemas/client"}}
                     }
                 }
             }
@@ -438,148 +402,72 @@
             "user": {
                 "type": "object",
                 "properties": {
-                    "firstName": {
-                        "type": "string",
-                        "description": "First name of the user"
-                    },
-                    "lastName": {
-                        "type": "string",
-                        "description": "Last name of the user"
-                    },
-                    "email": {
-                        "type": "string",
-                        "description": "Email address of the user"
-                    },
-                    "password": {
-                        "type": "string",
-                        "description": "User's password"
-                    },
-                    "age": {
-                        "type": "string",
-                        "description": "User's password"
-                    }, 
-                    "role": {
-                        "type": "string",
-                        "description": "User's password"
-                    },
-                    "verified": {
-                        "type": "string",
-                        "description": "User's password"
-                    }
+                    "firstName": {"type": "string", "description": "First name of the user"},
+                    "lastName": {"type": "string", "description": "Last name of the user"},
+                    "email": {"type": "string", "description": "Email address of the user"},
+                    "password": {"type": "string", "description": "User's password"},
+                    "age": {"type": "string", "description": "User's age"},
+                    "role": {"type": "string", "description": "User's role"},
+                    "verified": {"type": "string", "description": "User's verification status"}
                 }
             },
             "account": {
                 "type": "object",
                 "properties": {
-                    "firstName": {
-                        "type": "string",
-                        "description": "First name of the account holder"
-                    },
-                    "lastName": {
-                        "type": "string",
-                        "description": "Last name of the account holder"
-                    },
-                    "idNumber": {
-                        "type": "string",
-                        "description": "Identification number of the account holder"
-                    },
-                    "accountType": {
-                        "type": "string",
-                        "description": "Type of the bank account (e.g., savings, checking)"
-                    },
-                    "phone": {
-                        "type": "string",
-                        "description": "Contact phone number of the account holder"
-                    },
-                    "accountNumber": {
-                        "type": "string",
-                        "description": "Unique account number"
-                    }
+                    "firstName": {"type": "string", "description": "First name of the account holder"},
+                    "lastName": {"type": "string", "description": "Last name of the account holder"},
+                    "idNumber": {"type": "string", "description": "Identification number of the account holder"},
+                    "accountType": {"type": "string", "description": "Type of the bank account (e.g., savings, checking)"},
+                    "phone": {"type": "string", "description": "Contact phone number of the account holder"},
+                    "accountNumber": {"type": "string", "description": "Unique account number"}
+                }
+            },
+            "client": {
+                "type": "object",
+                "properties": {
+                    "firstName": {"type": "string", "description": "First name of the client"},
+                    "lastName": {"type": "string", "description": "Last name of the client"},
+                    "email": {"type": "string", "description": "Email address of the client"},
+                    "password": {"type": "string", "description": "Client's password"}
                 }
             },
             "transferRequest": {
                 "type": "object",
                 "properties": {
-                    "fromAccountNumber": {
-                        "type": "string",
-                        "description": "Account number to transfer funds from"
-                    },
-                    "toAccountNumber": {
-                        "type": "string",
-                        "description": "Account number to transfer funds to"
-                    },
-                    "amount": {
-                        "type": "number",
-                        "description": "Amount to transfer"
-                    }
+                    "fromAccountNumber": {"type": "string", "description": "Account number to transfer funds from"},
+                    "toAccountNumber": {"type": "string", "description": "Account number to transfer funds to"},
+                    "amount": {"type": "number", "description": "Amount to transfer"}
                 }
             },
             "depositRequest": {
                 "type": "object",
                 "properties": {
-                    "accountNumber": {
-                        "type": "string",
-                        "description": "Account number to deposit funds into"
-                    },
-                    "amount": {
-                        "type": "number",
-                        "description": "Amount to deposit"
-                    }
+                    "accountNumber": {"type": "string", "description": "Account number to deposit funds into"},
+                    "amount": {"type": "number", "description": "Amount to deposit"}
                 }
             },
             "withdrawalRequest": {
                 "type": "object",
                 "properties": {
-                    "accountNumber": {
-                        "type": "string",
-                        "description": "Account number to withdraw funds from"
-                    },
-                    "amount": {
-                        "type": "number",
-                        "description": "Amount to withdraw"
-                    }
+                    "accountNumber": {"type": "string", "description": "Account number to withdraw funds from"},
+                    "amount": {"type": "number", "description": "Amount to withdraw"}
                 }
             },
             "loginRequest": {
                 "type": "object",
                 "properties": {
-                    "email": {
-                        "type": "string",
-                        "description": "User's email address"
-                    },
-                    "password": {
-                        "type": "string",
-                        "description": "User's password"
-                    }
+                    "email": {"type": "string", "description": "User's email address"},
+                    "password": {"type": "string", "description": "User's password"}
                 }
             },
             "otpVerificationRequest": {
                 "type": "object",
                 "properties": {
-                    "email": {
-                        "type": "string",
-                        "description": "User's email address"
-                    },
-                    "otp": {
-                        "type": "string",
-                        "description": "One-time password for verification"
-                    }
+                    "email": {"type": "string", "description": "User's email address"},
+                    "otp": {"type": "string", "description": "One-time password for verification"}
                 }
-            }
-        },
-        "securitySchemes": {
-            "adminMiddleware": {
-                "type": "apiKey",
-                "name": "Authorization",
-                "in": "header",
-                "description": "Use admin token for authorization"
-            },
-            "userMiddleware": {
-                "type": "apiKey",
-                "name": "Authorization",
-                "in": "header",
-                "description": "Use user token for authorization"
             }
         }
     }
+
 }

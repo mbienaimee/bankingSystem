@@ -1,4 +1,4 @@
-import userModel from "../model/user.model.js";
+import clientModel from "../model/client.model.js";
 import jwt from "jsonwebtoken";
 
 const userMiddleware = async (req, res, next) => {
@@ -6,25 +6,28 @@ const userMiddleware = async (req, res, next) => {
     const token = req.cookies.token;
     console.log(token);
 
-    // Move decoding logic inside the if block
-    const payload = jwt.decode(token);
-    const emailpayload = payload.email;
+    try {
+      const payload = jwt.decode(token);
+      const emailPayload = payload.email;
 
-    // Finding user in database
-    const user = await userModel.findOne({ email: emailpayload });
+      // Finding user in database
+      const user = await clientModel.findOne({ email: emailPayload });
 
-    // Check if user exists
-    if (!user) {
-      return res.status(401).json({ message: "User not found" });
-    }
+      // if (!user) {
+      //   return res.status(401).json({ message: "User not found" });
+      // }
 
-    // Assigning with their roles
-    const role = user.role;
-    if (role === "user") {
-      next();
-    
-    } else {
-      return res.status(401).json({ message: "Access denied" });
+      // User exists, check their role
+      const role = user.role;
+      
+      if (role === "user") {
+        next();
+      } else {
+        return res.status(401).json({ message: "Access denied" });
+      }
+    } catch (error) {
+      console.error("Error in userMiddleware:", error);
+      return res.status(500).json({ message: "Internal Server Error" });
     }
   } else {
     res.status(401).json({ message: "Token not found" });

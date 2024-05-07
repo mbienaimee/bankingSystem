@@ -77,13 +77,13 @@ const accountController = {
             return res.status(404).json({ message: 'Account not found' });
         }
 
-        if (fromAccount.balance < amount) {
+        if (fromAccount.amount < amount) {
             return res.status(400).json({ message: 'Insufficient funds' });
         }
 
         // Perform the transfer
-        fromAccount.balance -= amount;
-        toAccount.balance += amount;
+        fromAccount.amount -= amount;
+        toAccount.amount += amount;
 
         await fromAccount.save();
         await toAccount.save();
@@ -95,48 +95,65 @@ const accountController = {
     }
 },
 depositFunds : async (req, res) => {
-    const { accountId, amount } = req.body;
+  const { accountId, amount } = req.body;
 
-    try {
-        const account = await accountModel.findById(accountId);
+  try {
+      // Find the account by ID
+      const account = await accountModel.findById(accountId);
 
-        if (!account) {
-            return res.status(404).json({ message: 'Account not found' });
-        }
+      if (!account) {
+          return res.status(404).json({ message: 'Account not found' });
+      }
 
-        // Perform the deposit
-        account.balance += amount;
-        await account.save();
+      // Update the account's amount by adding the deposited amount
+      account.amount += amount;
 
-        res.status(200).json({ message: 'Funds deposited successfully' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
+      // Save the updated account document back to the database
+      const updatedAccount = await account.save();
+
+      // Respond with a success message and the updated account details
+      res.status(200).json({
+          message: 'Funds deposited successfully',
+          updatedAccount: updatedAccount
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
 },
-withdrawFunds : async (req, res) => {
-    const { accountId, amount } = req.body;
 
-    try {
-        const account = await accountModel.findById(accountId);
+ withdrawFunds : async (req, res) => {
+  const { accountId, amount } = req.body;
 
-        if (!account) {
-            return res.status(404).json({ message: 'Account not found' });
-        }
+  try {
+      // Find the account by ID
+      const account = await accountModel.findById(accountId);
 
-        if (account.balance < amount) {
-            return res.status(400).json({ message: 'Insufficient funds' });
-        }
+      // If account not found, return 404
+      if (!account) {
+          return res.status(404).json({ message: 'Account not found' });
+      }
 
-        // Perform the withdrawal
-        account.balance -= amount;
-        await account.save();
+      // Check if the account balance is sufficient for the withdrawal
+      if (account.balance < amount) {
+          return res.status(400).json({ message: 'Insufficient funds' });
+      }
 
-        res.status(200).json({ message: 'Funds withdrawn successfully' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
+      // Perform the withdrawal by subtracting the amount from the account's balance
+      account.balance -= amount;
+
+      // Save the updated account back to the database
+      const updatedAccount = await account.save();
+
+      // Respond with success message and updated account details
+      return res.status(200).json({
+          message: 'Funds withdrawn successfully',
+          updatedAccount: updatedAccount
+      });
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
+  }
 }
 
 
